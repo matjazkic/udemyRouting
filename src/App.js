@@ -26,25 +26,48 @@ import Root from "./pages/Root";
 import { NewEventPage } from "./pages/NewEventPage";
 import EditEventPage from "./pages/EditEventPage";
 import EventsPage from "./pages/EventsPage";
-import EventDetailPage from "./pages/EventDetailPage";
+import EventDetailPage, {
+  loader as detailLoader,
+} from "./pages/EventDetailPage";
 import EventsRoot from "./pages/EventRoot";
+import { loader as eventsLoader } from "./pages/EventsPage";
+import ErrorPage from "./pages/ErrorPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
+    errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <HomePage /> },
+      {
+        index: true,
+        element: <HomePage />,
+      },
 
       {
         path: "events",
         element: <EventsRoot />,
         children: [
           ,
-          { path: "/events/:eventId", element: <EventDetailPage /> },
-          { path: "event/new", element: <NewEventPage /> },
-          { path: ":eventId/edit", element: <EditEventPage /> },
-          { index: true, element: <EventsPage /> },
+          ,
+          {
+            path: ":eventId",
+            children: [
+              {
+                index: true,
+                element: <EventDetailPage />,
+                loader: detailLoader,
+              },
+              { path: ":eventId/edit", element: <EditEventPage /> },
+            ],
+          },
+          { path: "new", element: <NewEventPage /> },
+
+          {
+            index: true,
+            element: <EventsPage />,
+            loader: eventsLoader,
+          },
         ],
       },
     ],
